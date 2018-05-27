@@ -13,18 +13,31 @@ import agency.july.entities.Book;
 
 public class RestClientUtil {
 	
-    public void getBookByIdDemo() {
+	public void addBookDemo() {
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.setContentType(MediaType.APPLICATION_JSON);
+        RestTemplate restTemplate = new RestTemplate();
+	    String url = "http://localhost:8080/books";
+	    Book book = new Book();
+	    book.setTitle("Thinking In Java");
+	    book.setAuthor("Bruce Eckel 2");
+        HttpEntity<Book> requestEntity = new HttpEntity<Book>( book, headers );
+        URI uri = restTemplate.postForLocation(url, requestEntity);
+        System.out.println( uri.getPath() );
+     }
+    
+	public void getBookByIdDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
         RestTemplate restTemplate = new RestTemplate();
 	    String url = "http://localhost:8080/books/{id}";
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
-        ResponseEntity<Book> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Book.class, 1);
-        Book book = responseEntity.getBody();
-        System.out.println("Id: " + book.getId() + ", Title: " + book.getTitle()
-                 + ", Author:" + book.getAuthor());      
+        
+        ResponseEntity<Book> responseEntity = restTemplate.exchange( url, HttpMethod.GET, requestEntity, Book.class, 1 );
+        Book aBook = responseEntity.getBody();
+        System.out.println("Id: " + aBook.getId() + ", Title: " + aBook.getTitle() + ", Author: " + aBook.getAuthor()); 
     }
-    
+	    
 	public void getAllBooksDemo() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -34,24 +47,10 @@ public class RestClientUtil {
         ResponseEntity<Book[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Book[].class);
         Book[] books = responseEntity.getBody();
         for(Book book : books) {
-              System.out.println( "Id: "+ book.getId() + ", Title: " + book.getTitle()
-                      + ", Author: " + book.getAuthor() );
+              System.out.println( "Id: "+ book.getId() + ", Title: " + book.getTitle() + ", Author: " + book.getAuthor() );
         }
     }
 	
-    public void addBookDemo() {
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-        RestTemplate restTemplate = new RestTemplate();
-	    String url = "http://localhost:8080/books";
-	    Book aBook = new Book();
-	    aBook.setTitle("Spring Hibernate");
-	    aBook.setAuthor("Spring");
-        HttpEntity<Book> requestEntity = new HttpEntity<Book>(aBook, headers);
-        URI uri = restTemplate.postForLocation(url, requestEntity);
-        System.out.println( uri.getPath() );    	
-    }
-    
     public void updateBookDemo() {
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,8 +58,8 @@ public class RestClientUtil {
 	    String url = "http://localhost:8080/books";
 	    Book aBook = new Book();
 	    aBook.setId(1);
-	    aBook.setTitle("Java Concurrency");
-	    aBook.setAuthor("Java");
+	    aBook.setTitle("kukareku");
+	    aBook.setAuthor("kakaka");
         HttpEntity<Book> requestEntity = new HttpEntity<Book>(aBook, headers);
         restTemplate.put(url, requestEntity);
     }
@@ -76,9 +75,9 @@ public class RestClientUtil {
     
     public static void main(String args[]) {
     	RestClientUtil util = new RestClientUtil();
-        //util.getBookByIdDemo();
+    	//util.addBookDemo();
+        util.getBookByIdDemo();
     	//util.getAllBooksDemo();
-    	util.addBookDemo();
     	//util.updateBookDemo();
     	//util.deleteBookDemo();
     }    
